@@ -38,6 +38,7 @@ function RootStack() {
         <Stack.Screen name="entry/new" options={{ presentation: 'fullScreenModal', title: 'Traum notieren' }} />
         <Stack.Screen name="entry/[id]" options={{ title: 'Traum' }} />
         <Stack.Screen name="dreamsigns" options={{ title: 'Traumzeichen' }} />
+        <Stack.Screen name="lesson/[day]" options={{ title: 'Lektion' }} />
       </Stack>
     </>
   );

@@ -1,6 +1,7 @@
 import { createTestDb } from '../../test-utils/testDb';
 import { createEntry, deleteEntry, getEntry, listAudioFiles, listEntries, updateEntry, upsertEntry } from '../entries';
 import { getSchemaVersion, LATEST_VERSION, migrate } from '../migrations';
+import { completeDay, listProgress, resetProgress } from '../progress';
 import { loadSettings, saveSettings } from '../settingsRepo';
 import { listTagStats, listWatchedSigns, setWatched } from '../tags';
 import type { EntryInput } from '../types';
@@ -118,5 +119,20 @@ describe('Einstellungen', () => {
     expect((await loadSettings(db)).realityChecksPerDay).toBe(10);
     await db.runAsync("UPDATE settings SET value = '{kaputt' WHERE key = 'app'");
     expect(await loadSettings(db)).toEqual(defaultSettings);
+  });
+});
+
+describe('Programmfortschritt', () => {
+  it('speichert erledigte Tage und behält das erste Datum', async () => {
+    const db = await setup();
+    await completeDay(db, 2, '2026-10-25');
+    await completeDay(db, 1, '2026-10-24');
+    await completeDay(db, 1, '2026-10-30');
+    expect(await listProgress(db)).toEqual([
+      { day: 1, completedOn: '2026-10-24' },
+      { day: 2, completedOn: '2026-10-25' },
+    ]);
+    await resetProgress(db);
+    expect(await listProgress(db)).toEqual([]);
   });
 });
