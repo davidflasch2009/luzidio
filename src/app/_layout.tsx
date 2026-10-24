@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppText } from '../components/ui/AppText';
 import { Button } from '../components/ui/Button';
 import { getDb } from '../db/client';
+import { useReminderSync } from '../hooks/useReminderSync';
 import { listAudioFiles } from '../db/entries';
 import { loadSettings, saveSettings } from '../db/settingsRepo';
 import { removeUnreferencedAudio } from '../services/audioFiles';
@@ -20,6 +21,7 @@ SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 function RootStack() {
   const p = useTheme();
+  useReminderSync();
   return (
     <>
       <StatusBar style={p.isDark ? 'light' : 'dark'} />
@@ -35,6 +37,7 @@ function RootStack() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="entry/new" options={{ presentation: 'fullScreenModal', title: 'Traum notieren' }} />
         <Stack.Screen name="entry/[id]" options={{ title: 'Traum' }} />
+        <Stack.Screen name="dreamsigns" options={{ title: 'Traumzeichen' }} />
       </Stack>
     </>
   );

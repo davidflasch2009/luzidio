@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { AppText } from '../../components/ui/AppText';
 import { Button } from '../../components/ui/Button';
 import { Screen } from '../../components/ui/Screen';
+import { RealityCheckCard } from '../../components/today/RealityCheckCard';
 import { useToday } from '../../hooks/useToday';
 import { formatDateLong } from '../../logic/dates';
 
@@ -21,6 +22,7 @@ export default function TodayScreen() {
         onPress={() => router.push('/entry/new')}
         accessibilityHint="Öffnet die schnelle Erfassung im Nachtmodus"
       />
+      <RealityCheckCard now={new Date()} />
     </Screen>
   );
 }
