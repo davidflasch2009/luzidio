@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { AboutCard } from '../../components/settings/AboutCard';
+import { DataSettings } from '../../components/settings/DataSettings';
+import { PreferenceSettings } from '../../components/settings/PreferenceSettings';
 import { ReminderSettings } from '../../components/settings/ReminderSettings';
 import { SleepTimeSettings } from '../../components/settings/SleepTimeSettings';
 import { AppText } from '../../components/ui/AppText';
@@ -27,6 +30,9 @@ export default function SettingsScreen() {
       ) : null}
       <SleepTimeSettings wakeMinutes={settings.wakeMinutes} bedMinutes={settings.bedMinutes} onChange={change} />
       <ReminderSettings settings={settings} onChange={change} />
+      <PreferenceSettings settings={settings} onChange={change} />
+      <DataSettings />
+      <AboutCard />
     </Screen>
   );
 }

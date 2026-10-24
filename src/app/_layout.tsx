@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { LockGate } from '../components/LockGate';
 import { AppText } from '../components/ui/AppText';
 import { Button } from '../components/ui/Button';
 import { getDb } from '../db/client';
@@ -88,7 +89,9 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <ThemeProvider>
         {ready ? (
-          <RootStack />
+          <LockGate>
+            <RootStack />
+          </LockGate>
         ) : failed ? (
           <View style={styles.error}>
             <AppText variant="heading" center>
