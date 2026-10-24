@@ -81,6 +81,7 @@
         "functions": 80,
         "branches": 75
       }
-    }
+    },
+    "globalSetup": "./jest.globalSetup.js"
   }
 }
