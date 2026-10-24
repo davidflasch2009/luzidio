@@ -21,9 +21,10 @@ export async function resyncReminders(): Promise<void> {
   await syncReminders(settings, signs);
 }
 
-function routeFor(kind: unknown): '/entry/new' | '/wbtb' | '/' | null {
+function routeFor(kind: unknown): '/entry/new' | '/exercise/mild' | '/' | null {
   if (kind === 'morning') return '/entry/new';
-  if (kind === 'wbtb') return '/wbtb';
+  // Nach dem WBTB-Wecker direkt zur MILD-Übung.
+  if (kind === 'wbtb') return '/exercise/mild';
   if (kind === 'rc' || kind === 'refill') return '/';
   return null;
 }

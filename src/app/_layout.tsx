@@ -39,6 +39,16 @@ function RootStack() {
         <Stack.Screen name="entry/[id]" options={{ title: 'Traum' }} />
         <Stack.Screen name="dreamsigns" options={{ title: 'Traumzeichen' }} />
         <Stack.Screen name="lesson/[day]" options={{ title: 'Lektion' }} />
+        <Stack.Screen
+          name="exercise/[id]"
+          options={{
+            title: 'Übung',
+            headerStyle: { backgroundColor: p.backgroundNight },
+            headerTintColor: p.textNight,
+            contentStyle: { backgroundColor: p.backgroundNight },
+          }}
+        />
+        <Stack.Screen name="wbtb" options={{ title: 'WBTB-Wecker' }} />
       </Stack>
     </>
   );
