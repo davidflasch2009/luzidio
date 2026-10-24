@@ -10,6 +10,7 @@
     "expo-document-picker": "~58.0.4",
     "expo-file-system": "~58.0.11",
     "expo-font": "~58.0.10",
+    "expo-keep-awake": "~58.0.3",
     "expo-linking": "~58.0.14",
     "expo-local-authentication": "~58.0.2",
     "expo-notifications": "~58.1.6",
@@ -82,6 +83,7 @@
         "branches": 75
       }
     },
-    "globalSetup": "./jest.globalSetup.js"
+    "globalSetup": "./jest.globalSetup.js",
+    "resolver": "react-native-reanimated/jest/resolver"
   }
 }

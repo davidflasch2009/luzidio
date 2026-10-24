@@ -77,9 +77,11 @@ export function TagEditor({ tags, suggestions, onChange, night }: Props) {
 const styles = StyleSheet.create({
   wrap: { gap: spacing.sm },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  inputRow: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
+  inputRow: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center', flexWrap: 'wrap' },
   input: {
-    flex: 1,
+    flexGrow: 1,
+    flexBasis: 160,
+    minWidth: 0,
     minHeight: minTouch + 4,
     borderWidth: 1,
     borderRadius: radius.md,

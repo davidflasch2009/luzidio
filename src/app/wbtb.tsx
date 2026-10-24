@@ -90,6 +90,10 @@ export default function WbtbScreen() {
           WBTB unterbricht deinen Schlaf. Nutze es höchstens ein- bis zweimal pro Woche, am besten vor freien Tagen. Wenn du
           tagsüber müde wirst, mach eine Pause.
         </AppText>
+        <AppText variant="caption" color="textMuted">
+          Tipp: Ist ein Fokus wie „Schlafen“ oder „Nicht stören“ aktiv, erlaube Luzidio darin Mitteilungen – sonst bleibt
+          der Wecker stumm.
+        </AppText>
       </Card>
 
       <Card>

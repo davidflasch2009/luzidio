@@ -74,6 +74,8 @@ export async function getPermission(): Promise<PermissionState> {
 
 export async function requestPermission(): Promise<PermissionState> {
   try {
+    // Android 13+: Ohne vorhandenen Kanal erscheint der Berechtigungsdialog nicht.
+    await configureNotifications();
     return toState(await Notifications.requestPermissionsAsync());
   } catch {
     return 'denied';
@@ -101,7 +103,8 @@ export async function scheduleOne(n: DesiredNotification): Promise<void> {
     content: {
       title: n.title,
       body: n.body,
-      sound: n.kind === 'wbtb' ? 'default' : undefined,
+      // Systemton; Lautstärke und Stil bestimmen die Mitteilungseinstellungen des Geräts.
+      sound: n.kind === 'refill' ? undefined : 'default',
       data: { kind: n.kind, when: whenKey(n) },
     },
     trigger,
@@ -129,8 +132,18 @@ async function doSync(settings: Settings, signs: readonly string[], now: Date): 
     const permission = await getPermission();
     const desired = permission === 'granted' ? buildDesiredNotifications(settings, signs, now) : [];
     const { toCancel, toSchedule } = diffNotifications(await listExisting(), desired);
-    for (const id of toCancel) await Notifications.cancelScheduledNotificationAsync(id);
-    for (const n of toSchedule) await scheduleOne(n);
+    for (const id of toCancel) await cancelById(id);
+    let failed = 0;
+    for (const n of toSchedule) {
+      // Inzwischen vergangene Zeitpunkte überspringen; ein Fehler stoppt nicht die übrigen.
+      if ('at' in n && n.at.getTime() <= Date.now() + 5000) continue;
+      try {
+        await scheduleOne(n);
+      } catch {
+        failed++;
+      }
+    }
+    if (failed > 0) return { status: 'error', scheduled: desired.length - failed };
     return { status: permission === 'granted' ? 'ok' : 'no-permission', scheduled: desired.length };
   } catch {
     return { status: 'error', scheduled: 0 };

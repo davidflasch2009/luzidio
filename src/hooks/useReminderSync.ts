@@ -71,8 +71,15 @@ export function useReminderSync(): void {
       const target = routeFor(response?.notification.request.content.data?.kind);
       if (!target) return;
       Notifications.clearLastNotificationResponse();
-      if (target === '/') router.navigate('/');
-      else router.push(target);
+      // Erst nach dem aktuellen Render navigieren, damit der Navigator sicher bereit ist.
+      setTimeout(() => {
+        try {
+          if (target === '/') router.navigate('/');
+          else router.push(target);
+        } catch {
+          // Navigation nicht möglich (z. B. während des Onboardings) – ignorieren.
+        }
+      }, 0);
     };
     try {
       handle(Notifications.getLastNotificationResponse());

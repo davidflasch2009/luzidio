@@ -55,6 +55,10 @@ function ExerciseView({ exercise }: { exercise: Exercise }) {
               Bedienungshilfen bzw. Sprachausgabe hinzufügen.
             </AppText>
           ) : null}
+          <AppText variant="caption" color="textNight">
+            Während der Übung bleibt der Bildschirm an, damit die Anleitung nicht abbricht. Leg das Handy mit dem Display
+            nach unten neben dich.
+          </AppText>
           <AppText variant="label" color="textNight">
             Timer mit Auto-Stopp
           </AppText>

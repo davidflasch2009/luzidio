@@ -113,8 +113,8 @@ export default function DreamSignsScreen() {
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
-  input: { flex: 1, minHeight: minTouch + 4, borderWidth: 1, borderRadius: radius.md, paddingHorizontal: spacing.md, fontSize: 17 },
+  row: { flexDirection: 'row', gap: spacing.sm, alignItems: 'center', flexWrap: 'wrap' },
+  input: { flexGrow: 1, flexBasis: 160, minWidth: 0, minHeight: minTouch + 4, borderWidth: 1, borderRadius: radius.md, paddingHorizontal: spacing.md, fontSize: 17 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   statRow: { flexDirection: 'row', alignItems: 'center' },
   flex: { flex: 1 },

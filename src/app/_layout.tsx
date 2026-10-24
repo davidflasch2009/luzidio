@@ -36,6 +36,7 @@ function RootStack() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="entry/new" options={{ presentation: 'fullScreenModal', title: 'Traum notieren' }} />
         <Stack.Screen name="entry/[id]" options={{ title: 'Traum' }} />
         <Stack.Screen name="dreamsigns" options={{ title: 'Traumzeichen' }} />

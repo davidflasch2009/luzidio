@@ -4,7 +4,7 @@ import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
 import { useTheme } from '../../theme/ThemeProvider';
 import { spacing } from '../../theme/typography';
-import { Starfield } from './Starfield';
+import { ScreenStarfield } from './Starfield';
 
 type Props = {
   children: ReactNode;
@@ -32,7 +32,7 @@ export function Screen({ children, scroll = true, stars = false, night = false, 
   );
   return (
     <SafeAreaView style={[styles.fill, { backgroundColor: bg }]} edges={edges}>
-      {stars && p.isDark ? <Starfield /> : null}
+      {stars && p.isDark ? <ScreenStarfield /> : null}
       {keyboard ? (
         <KeyboardAvoidingView style={styles.fill} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           {content}

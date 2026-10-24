@@ -1,3 +1,4 @@
+import { useIsFocused } from 'expo-router';
 import { useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
@@ -63,8 +64,10 @@ function TwinkleStar({ star, color, animate }: { star: Star; color: string; anim
   );
 }
 
+type Props = { count?: number; seed?: number; active?: boolean };
+
 /** Dezenter, ruhig funkelnder Sternenhimmel als Hintergrund. */
-export function Starfield({ count = 40, seed = 7 }: { count?: number; seed?: number }) {
+export function Starfield({ count = 40, seed = 7, active = true }: Props) {
   const p = useTheme();
   const reduceMotion = useReducedMotion();
   const stars = useMemo(() => makeStars(count, seed), [count, seed]);
@@ -76,7 +79,7 @@ export function Starfield({ count = 40, seed = 7 }: { count?: number; seed?: num
       importantForAccessibility="no-hide-descendants"
     >
       {stars.map((s, i) => (
-        <TwinkleStar key={i} star={s} color={p.star} animate={!reduceMotion && i % 3 === 0} />
+        <TwinkleStar key={i} star={s} color={p.star} animate={active && !reduceMotion && i % 3 === 0} />
       ))}
     </View>
   );
@@ -85,3 +88,9 @@ export function Starfield({ count = 40, seed = 7 }: { count?: number; seed?: num
 const styles = StyleSheet.create({
   star: { position: 'absolute' },
 });
+
+/** Sternenhimmel für Bildschirme im Navigator: animiert nur, solange der Bildschirm sichtbar ist (spart Akku). */
+export function ScreenStarfield() {
+  const focused = useIsFocused();
+  return <Starfield active={focused} />;
+}
