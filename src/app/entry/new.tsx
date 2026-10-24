@@ -11,7 +11,7 @@ import { useDbQuery } from '../../hooks/useDbQuery';
 import { useToday } from '../../hooks/useToday';
 import { emptyDraft } from '../../logic/entryDraft';
 import { useAppStore } from '../../store/appStore';
-import { useTheme } from '../../theme/ThemeProvider';
+import { NightTheme, useTheme } from '../../theme/ThemeProvider';
 
 /** Schnellerfassung – dunkel, große Schrift, Tastatur sofort offen. */
 export default function NewEntryScreen() {
@@ -42,19 +42,21 @@ export default function NewEntryScreen() {
           contentStyle: { backgroundColor: p.backgroundNight },
         }}
       />
-      <Screen night edges={['bottom']} keyboard>
-        <EntryForm
-          initial={initial}
-          today={today}
-          tagSuggestions={suggestions}
-          submitLabel="Traum speichern"
-          onSubmit={submit}
-          onDone={done}
-          night
-          autoFocus
-          detailsInitiallyOpen={false}
-        />
-      </Screen>
+      <NightTheme>
+        <Screen night edges={['bottom']} keyboard>
+          <EntryForm
+            initial={initial}
+            today={today}
+            tagSuggestions={suggestions}
+            submitLabel="Traum speichern"
+            onSubmit={submit}
+            onDone={done}
+            night
+            autoFocus
+            detailsInitiallyOpen={false}
+          />
+        </Screen>
+      </NightTheme>
     </>
   );
 }

@@ -16,7 +16,7 @@ import { formatDuration } from '../../logic/dates';
 import type { FinishReason } from '../../logic/guidedSession';
 import { hasGermanVoice } from '../../services/speech';
 import { useAppStore } from '../../store/appStore';
-import { useTheme } from '../../theme/ThemeProvider';
+import { NightTheme, useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/typography';
 
 const finishText: Record<FinishReason, string> = {
@@ -118,7 +118,11 @@ export default function ExerciseScreen() {
       </Screen>
     );
   }
-  return <ExerciseView exercise={exercises[id]} />;
+  return (
+    <NightTheme>
+      <ExerciseView exercise={exercises[id]} />
+    </NightTheme>
+  );
 }
 
 const styles = StyleSheet.create({

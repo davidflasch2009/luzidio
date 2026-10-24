@@ -16,3 +16,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 export function useTheme(): Palette {
   return useContext(ThemeContext);
 }
+
+/** Erzwingt die dunkle Palette, z. B. für die nächtliche Schnellerfassung und die Übungen. */
+export function NightTheme({ children }: { children: ReactNode }) {
+  return <ThemeContext.Provider value={darkPalette}>{children}</ThemeContext.Provider>;
+}
