@@ -11,6 +11,7 @@ import { useNow } from '../hooks/useNow';
 import { formatDateShort, formatTime, toDateKey } from '../logic/dates';
 import { formatOffset, planWbtb, WBTB_ID_PREFIX, wbtbId, wbtbOffsets } from '../logic/wbtb';
 import { cancelById, getPermission, listScheduled, requestPermission, scheduleOne } from '../services/notifications';
+import { appOnlyHint, isWeb } from '../services/platform';
 import { useAppStore } from '../store/appStore';
 import { spacing } from '../theme/typography';
 
@@ -33,6 +34,7 @@ export default function WbtbScreen() {
   );
 
   const refresh = useCallback(async () => {
+    if (isWeb) return;
     const list = await listScheduled();
     const found = list.find((n) => n.id.startsWith(WBTB_ID_PREFIX));
     const at = found ? parseWhen(found.when) : null;
@@ -145,7 +147,13 @@ export default function WbtbScreen() {
         </View>
       ) : null}
 
+      {isWeb ? (
+        <AppText variant="body" color="textMuted">
+          Den Wecker stellen: {appOnlyHint}
+        </AppText>
+      ) : null}
       <Button
+        disabled={isWeb}
         label={active ? 'Für diese Nacht neu stellen' : 'Für diese Nacht aktivieren'}
         icon="alarm"
         size="lg"

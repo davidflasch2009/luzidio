@@ -7,6 +7,7 @@ import { resyncReminders } from '../../hooks/useReminderSync';
 import { formatTime } from '../../logic/dates';
 import { buildDesiredNotifications } from '../../logic/notificationSchedule';
 import { requestPermission } from '../../services/notifications';
+import { appOnlyHint, isWeb } from '../../services/platform';
 import { useAppStore } from '../../store/appStore';
 import { spacing } from '../../theme/typography';
 import { AppText } from '../ui/AppText';
@@ -38,7 +39,11 @@ export function RealityCheckCard({ now }: { now: Date }) {
   return (
     <Card>
       <AppText variant="heading">Realitätschecks</AppText>
-      {!settings.realityChecksEnabled ? (
+      {isWeb ? (
+        <AppText variant="body" color="textMuted">
+          Zufällige Erinnerungen über den Tag: {appOnlyHint} Hier kannst du jederzeit selbst einen Check machen.
+        </AppText>
+      ) : !settings.realityChecksEnabled ? (
         <>
           <AppText variant="body" color="textMuted">
             Die Erinnerungen sind ausgeschaltet.

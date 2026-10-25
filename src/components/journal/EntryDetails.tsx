@@ -4,6 +4,7 @@ import type { Entry } from '../../db/types';
 import { formatDateShort } from '../../logic/dates';
 import { moodOptions } from '../../logic/entryDraft';
 import { audioExists, audioUri } from '../../services/audioFiles';
+import { isWeb } from '../../services/platform';
 import { spacing } from '../../theme/typography';
 import { AppText } from '../ui/AppText';
 import { Card } from '../ui/Card';
@@ -12,7 +13,7 @@ import { AudioPlayback } from './AudioPlayback';
 
 export function EntryDetails({ entry }: { entry: Entry }) {
   const mood = moodOptions.find((m) => m.value === entry.mood);
-  const hasAudio = entry.audioFile ? audioExists(entry.audioFile) : false;
+  const hasAudio = entry.audioFile && !isWeb ? audioExists(entry.audioFile) : false;
   return (
     <View style={styles.wrap}>
       <AppText variant="caption" color="textMuted">
@@ -29,7 +30,7 @@ export function EntryDetails({ entry }: { entry: Entry }) {
           <AudioPlayback uri={audioUri(entry.audioFile)} />
         ) : (
           <AppText variant="caption" color="danger">
-            Die Audiodatei dieses Eintrags wurde nicht gefunden.
+            {isWeb ? 'Sprachmemos lassen sich nur in der Handy-App abspielen.' : 'Die Audiodatei dieses Eintrags wurde nicht gefunden.'}
           </AppText>
         )
       ) : null}

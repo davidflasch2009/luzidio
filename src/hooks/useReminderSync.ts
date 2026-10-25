@@ -6,6 +6,7 @@ import { AppState } from 'react-native';
 import { getDb } from '../db/client';
 import { listWatchedSigns } from '../db/tags';
 import { getPermission, syncReminders } from '../services/notifications';
+import { isWeb } from '../services/platform';
 import { useAppStore } from '../store/appStore';
 
 /** Plant Erinnerungen neu und aktualisiert den Berechtigungsstatus. */
@@ -49,7 +50,7 @@ export function useReminderSync(): void {
 
   // Kurz verzögert, damit schnelles Tippen (z. B. Uhrzeit-Stepper) nur einmal neu plant.
   useEffect(() => {
-    if (!ready || !onboardingDone) return;
+    if (isWeb || !ready || !onboardingDone) return;
     const timer = setTimeout(() => {
       resyncReminders().catch(() => undefined);
     }, 600);
@@ -57,7 +58,7 @@ export function useReminderSync(): void {
   }, [ready, onboardingDone, key]);
 
   useEffect(() => {
-    if (!ready || !onboardingDone) return;
+    if (isWeb || !ready || !onboardingDone) return;
     const sub = AppState.addEventListener('change', (state) => {
       if (state === 'active') resyncReminders().catch(() => undefined);
     });
@@ -66,7 +67,7 @@ export function useReminderSync(): void {
 
   // Tippen auf eine Benachrichtigung öffnet den passenden Bildschirm.
   useEffect(() => {
-    if (!ready) return;
+    if (isWeb || !ready) return;
     const handle = (response: Notifications.NotificationResponse | null) => {
       const target = routeFor(response?.notification.request.content.data?.kind);
       if (!target) return;

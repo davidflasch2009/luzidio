@@ -4,6 +4,7 @@ import Animated, { FadeIn, useReducedMotion } from 'react-native-reanimated';
 
 import type { Settings } from '../../logic/settings';
 import type { PermissionState } from '../../services/notifications';
+import { isWeb } from '../../services/platform';
 import { useTheme } from '../../theme/ThemeProvider';
 import { spacing } from '../../theme/typography';
 import { AppText } from '../ui/AppText';
@@ -46,6 +47,8 @@ export function OnboardingFlow({ initial, requestNotifications, onFinish }: Prop
   };
 
   const isLast = step === STEPS - 1;
+  // Im Browser gibt es keine Benachrichtigungen – dort direkt starten.
+  const asked = permission !== null || isWeb;
   return (
     <View style={styles.wrap}>
       <View style={styles.dots} accessible accessibilityLabel={`Schritt ${step + 1} von ${STEPS}`}>
@@ -72,13 +75,13 @@ export function OnboardingFlow({ initial, requestNotifications, onFinish }: Prop
         </AppText>
       ) : null}
       <View style={styles.actions}>
-        {isLast && permission === null ? (
+        {isLast && !asked ? (
           <Button label="Benachrichtigungen erlauben" icon="notifications-outline" size="lg" onPress={ask} loading={busy} />
         ) : null}
         {isLast ? (
           <Button
-            label={permission === null ? 'Später' : "Los geht's"}
-            variant={permission === null ? 'ghost' : 'primary'}
+            label={asked ? "Los geht's" : 'Später'}
+            variant={asked ? 'primary' : 'ghost'}
             size="lg"
             onPress={finish}
             disabled={busy}

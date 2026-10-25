@@ -1,6 +1,6 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { EntryDetails } from '../../components/journal/EntryDetails';
 import { EntryForm } from '../../components/journal/EntryForm';
@@ -15,6 +15,7 @@ import type { Db, EntryInput } from '../../db/types';
 import { useDbQuery } from '../../hooks/useDbQuery';
 import { useToday } from '../../hooks/useToday';
 import { deleteAudio } from '../../services/audioFiles';
+import { confirmAction } from '../../services/platform';
 import { useAppStore } from '../../store/appStore';
 import { spacing } from '../../theme/typography';
 
@@ -44,26 +45,24 @@ export default function EntryScreen() {
   );
   const finishEdit = useCallback(() => setEditing(false), []);
 
-  const confirmDelete = () => {
-    Alert.alert('Traum löschen?', 'Der Eintrag und ein eventuelles Sprachmemo werden endgültig gelöscht.', [
-      { text: 'Abbrechen', style: 'cancel' },
-      {
-        text: 'Löschen',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            const db = await getDb();
-            const audio = await deleteEntry(db, id ?? '');
-            deleteAudio(audio);
-            useAppStore.getState().bumpRevision();
-            if (router.canGoBack()) router.back();
-            else router.replace('/journal');
-          } catch {
-            Alert.alert('Löschen fehlgeschlagen', 'Bitte versuch es noch einmal.');
-          }
-        },
-      },
-    ]);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const confirmDelete = async () => {
+    const ok = await confirmAction(
+      'Traum löschen?',
+      'Der Eintrag und ein eventuelles Sprachmemo werden endgültig gelöscht.',
+      'Löschen',
+    );
+    if (!ok) return;
+    try {
+      const db = await getDb();
+      const audio = await deleteEntry(db, id ?? '');
+      deleteAudio(audio);
+      useAppStore.getState().bumpRevision();
+      if (router.canGoBack()) router.back();
+      else router.replace('/journal');
+    } catch {
+      setDeleteError('Löschen fehlgeschlagen. Bitte versuch es noch einmal.');
+    }
   };
 
   if (!entry || !initial) {
@@ -103,6 +102,11 @@ export default function EntryScreen() {
           <View style={styles.actions}>
             <Button label="Bearbeiten" icon="create-outline" size="lg" onPress={() => setEditing(true)} />
             <Button label="Löschen" icon="trash-outline" variant="danger" onPress={confirmDelete} />
+            {deleteError ? (
+              <AppText variant="body" color="danger">
+                {deleteError}
+              </AppText>
+            ) : null}
           </View>
         </>
       )}

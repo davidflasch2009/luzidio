@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
 
 import { defaultSettings } from '../../logic/settings';
 import { exportAll, importFromFile, wipeEverything } from '../../services/backupFiles';
+import { appOnlyHint, confirmAction, isWeb } from '../../services/platform';
 import { useAppStore } from '../../store/appStore';
 import { AppText } from '../ui/AppText';
 import { Button } from '../ui/Button';
@@ -54,23 +54,15 @@ export function DataSettings() {
     }
   };
 
-  const confirmWipe = () => {
-    Alert.alert(
+  const confirmWipe = async () => {
+    const first = await confirmAction(
       'Wirklich alles löschen?',
       'Alle Träume, Sprachmemos, Traumzeichen, dein Programmfortschritt und alle Einstellungen werden endgültig gelöscht. Erstelle vorher eine Sicherung, wenn du die Daten behalten willst.',
-      [
-        { text: 'Abbrechen', style: 'cancel' },
-        {
-          text: 'Weiter',
-          style: 'destructive',
-          onPress: () =>
-            Alert.alert('Letzte Bestätigung', 'Das kann nicht rückgängig gemacht werden.', [
-              { text: 'Abbrechen', style: 'cancel' },
-              { text: 'Endgültig löschen', style: 'destructive', onPress: wipe },
-            ]),
-        },
-      ],
+      'Weiter',
     );
+    if (!first) return;
+    const second = await confirmAction('Letzte Bestätigung', 'Das kann nicht rückgängig gemacht werden.', 'Endgültig löschen');
+    if (second) await wipe();
   };
 
   return (
@@ -81,8 +73,16 @@ export function DataSettings() {
         Fortschritt und Einstellungen. Beim Import werden Daten zusammengeführt, nichts wird überschrieben außer Einträgen
         mit gleicher ID.
       </AppText>
-      <Button label="Daten exportieren" icon="share-outline" variant="secondary" onPress={doExport} loading={busy === 'export'} disabled={busy !== null} />
-      <Button label="Daten importieren" icon="download-outline" variant="secondary" onPress={doImport} loading={busy === 'import'} disabled={busy !== null} />
+      {isWeb ? (
+        <AppText variant="caption" color="textMuted">
+          Export und Import: {appOnlyHint} Im Browser liegen die Daten nur in diesem Browser auf diesem Gerät.
+        </AppText>
+      ) : (
+        <>
+          <Button label="Daten exportieren" icon="share-outline" variant="secondary" onPress={doExport} loading={busy === 'export'} disabled={busy !== null} />
+          <Button label="Daten importieren" icon="download-outline" variant="secondary" onPress={doImport} loading={busy === 'import'} disabled={busy !== null} />
+        </>
+      )}
       {message ? (
         <AppText variant="body" color={message.error ? 'danger' : 'success'} accessibilityLiveRegion="polite">
           {message.text}

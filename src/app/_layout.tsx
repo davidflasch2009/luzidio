@@ -13,6 +13,7 @@ import { useReminderSync } from '../hooks/useReminderSync';
 import { listAudioFiles } from '../db/entries';
 import { loadSettings, saveSettings } from '../db/settingsRepo';
 import { removeUnreferencedAudio } from '../services/audioFiles';
+import { isWeb } from '../services/platform';
 import { useAppStore } from '../store/appStore';
 import { darkPalette } from '../theme/colors';
 import { ThemeProvider, useTheme } from '../theme/ThemeProvider';
@@ -61,6 +62,7 @@ async function bootstrap(): Promise<void> {
   const settings = await loadSettings(db);
   useAppStore.getState().hydrate(settings, (s) => saveSettings(db, s));
   // Verwaiste Sprachmemos (z. B. nach Abstürzen) aufräumen – Fehler sind hier unkritisch.
+  if (isWeb) return;
   listAudioFiles(db)
     .then((files) => removeUnreferencedAudio(files))
     .catch(() => undefined);

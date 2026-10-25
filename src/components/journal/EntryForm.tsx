@@ -1,9 +1,10 @@
 import { useNavigation, usePreventRemove, type NavigationAction } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 
 import type { EntryInput } from '../../db/types';
 import { clarityOptions, moodOptions } from '../../logic/entryDraft';
+import { appOnlyHint, confirmAction, isWeb } from '../../services/platform';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/typography';
 import { AppText } from '../ui/AppText';
@@ -49,17 +50,13 @@ export function EntryForm({
   const navigation = useNavigation();
   const [leaveAction, setLeaveAction] = useState<NavigationAction | null>(null);
   usePreventRemove(editor.dirty && !leaveAction, ({ data }) => {
-    Alert.alert('Änderungen verwerfen?', 'Dein Traum ist noch nicht gespeichert.', [
-      { text: 'Weiter bearbeiten', style: 'cancel' },
-      {
-        text: 'Verwerfen',
-        style: 'destructive',
-        onPress: () => {
-          editor.discardPending();
-          setLeaveAction(data.action);
-        },
+    confirmAction('Änderungen verwerfen?', 'Dein Traum ist noch nicht gespeichert.', 'Verwerfen', 'Weiter bearbeiten').then(
+      (discard) => {
+        if (!discard) return;
+        editor.discardPending();
+        setLeaveAction(data.action);
       },
-    ]);
+    );
   });
   useEffect(() => {
     if (leaveAction) navigation.dispatch(leaveAction);
@@ -88,6 +85,10 @@ export function EntryForm({
       />
       {editor.audioPreviewUri ? (
         <AudioPlayback uri={editor.audioPreviewUri} night={night} onRemove={editor.removeAudio} />
+      ) : isWeb ? (
+        <AppText variant="caption" color={night ? 'textNight' : 'textMuted'}>
+          Sprachmemos: {appOnlyHint}
+        </AppText>
       ) : (
         <VoiceMemoRecorder onRecorded={editor.setRecording} night={night} />
       )}

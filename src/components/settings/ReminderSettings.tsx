@@ -4,6 +4,7 @@ import { Linking } from 'react-native';
 import { resyncReminders } from '../../hooks/useReminderSync';
 import { RC_MAX, RC_MIN, type Settings } from '../../logic/settings';
 import { requestPermission } from '../../services/notifications';
+import { appOnlyHint, isWeb } from '../../services/platform';
 import { useAppStore } from '../../store/appStore';
 import { AppText } from '../ui/AppText';
 import { Button } from '../ui/Button';
@@ -23,7 +24,12 @@ export function ReminderSettings({ settings, onChange }: Props) {
   return (
     <Card>
       <AppText variant="heading">Erinnerungen</AppText>
-      {permission !== 'granted' && permission !== null ? (
+      {isWeb ? (
+        <AppText variant="body" color="textMuted">
+          Realitätscheck-Erinnerungen und die Morgen-Erinnerung: {appOnlyHint}
+        </AppText>
+      ) : null}
+      {!isWeb && permission !== 'granted' && permission !== null ? (
         <>
           <AppText variant="body" color="danger">
             {permission === 'denied'

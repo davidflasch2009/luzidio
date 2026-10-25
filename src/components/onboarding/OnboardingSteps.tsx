@@ -2,6 +2,7 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import { formatMinutes, RC_MAX, RC_MIN } from '../../logic/settings';
 import type { PermissionState } from '../../services/notifications';
+import { appOnlyHint, isWeb } from '../../services/platform';
 import { spacing } from '../../theme/typography';
 import { AppText } from '../ui/AppText';
 import { Card } from '../ui/Card';
@@ -87,6 +88,20 @@ export function TimesStep({ wakeMinutes, bedMinutes, perDay, onChange }: TimesPr
 }
 
 export function NotificationStep({ permission }: { permission: PermissionState | null }) {
+  if (isWeb) {
+    return (
+      <View style={styles.step}>
+        <AppText variant="title">Du nutzt die Browser-Version</AppText>
+        <AppText variant="body">
+          Tagebuch, Lektionen, Übungen und Statistik funktionieren hier. Deine Daten bleiben nur in diesem Browser auf
+          diesem Gerät.
+        </AppText>
+        <AppText variant="body" color="textMuted">
+          Erinnerungen, WBTB-Wecker, Sprachmemos, App-Sperre sowie Export und Import: {appOnlyHint}
+        </AppText>
+      </View>
+    );
+  }
   return (
     <View style={styles.step}>
       <AppText variant="title">Erinnerungen erlauben</AppText>

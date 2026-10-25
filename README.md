@@ -29,7 +29,21 @@ Alle Daten bleiben auf dem Gerät. Es gibt kein Backend, kein Konto und keine Tr
   (dunkel/hell/System) und App-Sperre per Face ID, Fingerabdruck oder Gerätecode. Dazu Export und Import aller Daten
   als JSON (inklusive Sprachmemos) und „Alles löschen“.
 
-## Starten
+## Im Browser ausprobieren
+
+**https://davidflasch2009.github.io/luzidio/**
+
+Die Browser-Version wird bei jedem Push auf `main` automatisch gebaut und veröffentlicht
+(`.github/workflows/pages.yml`). Dort funktionieren Tagebuch (Text), Suche und Filter, Traumzeichen, das
+30-Tage-Programm, die Übungen mit Vorlesen und die Statistik. Die Daten liegen nur in diesem Browser auf diesem Gerät.
+
+Nur in der Handy-App gibt es: Erinnerungen und WBTB-Wecker, Sprachmemos, App-Sperre sowie Export und Import.
+
+Lokal bauen: `npm run build:web` (Ausgabe in `dist/`). Weil die Browser-Datenbank `SharedArrayBuffer` braucht und
+GitHub Pages die nötigen Header nicht setzen kann, ergänzt ein kleiner Service Worker (`web/coi-sw.js`) sie. Beim
+allerersten Aufruf lädt die Seite deshalb einmal kurz neu.
+
+## Starten (Handy-App)
 
 Voraussetzungen: Node.js 20 oder neuer, ein Smartphone mit **Expo Go** (SDK 58) aus dem App Store oder Play Store.
 
@@ -89,7 +103,7 @@ Manuell testen: siehe [`TESTING.md`](TESTING.md).
   unverschlüsselt, bewahre sie sicher auf.
 - **Die App-Sperre** schützt die Oberfläche. Die Datenbank selbst ist nicht zusätzlich verschlüsselt (Schutz durch die
   Geräteverschlüsselung des Betriebssystems).
-- **Web wird nicht unterstützt.** Die App ist für iOS und Android gedacht.
+- **Die Browser-Version ist eingeschränkt** (siehe oben) und benötigt einen aktuellen Browser mit Service-Worker-Unterstützung. Im privaten Modus von Firefox funktionieren Service Worker nicht.
 
 ## Ideen für Version 2
 

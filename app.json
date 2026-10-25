@@ -26,7 +26,14 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "bundler": "metro",
+      "name": "Luzidio",
+      "shortName": "Luzidio",
+      "lang": "de",
+      "themeColor": "#0B1026",
+      "backgroundColor": "#0B1026"
     },
     "plugins": [
       "expo-router",
@@ -63,7 +70,8 @@
       "expo-font"
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/luzidio"
     }
   }
 }

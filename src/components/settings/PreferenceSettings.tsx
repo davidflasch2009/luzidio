@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { SPEECH_RATE_MAX, SPEECH_RATE_MIN, type Settings } from '../../logic/settings';
 import { authenticate, getBiometricStatus, type BiometricStatus } from '../../services/auth';
+import { isWeb } from '../../services/platform';
 import { previewVoice, stopSpeaking } from '../../services/speech';
 import { useAppStore } from '../../store/appStore';
 import type { ThemeMode } from '../../theme/colors';
@@ -27,7 +28,7 @@ export function PreferenceSettings({ settings, onChange }: Props) {
   const [lockError, setLockError] = useState<string | null>(null);
 
   useEffect(() => {
-    getBiometricStatus().then(setBio);
+    if (!isWeb) getBiometricStatus().then(setBio);
     return () => stopSpeaking();
   }, []);
 
@@ -68,26 +69,28 @@ export function PreferenceSettings({ settings, onChange }: Props) {
         </View>
       </Card>
 
-      <Card>
-        <AppText variant="heading">Privatsphäre</AppText>
-        <ToggleRow
-          label="App-Sperre"
-          description="Face ID, Fingerabdruck oder Gerätecode beim Öffnen"
-          value={settings.lockEnabled}
-          onChange={toggleLock}
-          disabled={!bio?.available && !settings.lockEnabled}
-        />
-        {bio && !bio.available ? (
-          <AppText variant="caption" color="textMuted">
-            {bio.reason}
-          </AppText>
-        ) : null}
-        {lockError ? (
-          <AppText variant="caption" color="danger">
-            {lockError}
-          </AppText>
-        ) : null}
-      </Card>
+      {isWeb ? null : (
+        <Card>
+          <AppText variant="heading">Privatsphäre</AppText>
+          <ToggleRow
+            label="App-Sperre"
+            description="Face ID, Fingerabdruck oder Gerätecode beim Öffnen"
+            value={settings.lockEnabled}
+            onChange={toggleLock}
+            disabled={!bio?.available && !settings.lockEnabled}
+          />
+          {bio && !bio.available ? (
+            <AppText variant="caption" color="textMuted">
+              {bio.reason}
+            </AppText>
+          ) : null}
+          {lockError ? (
+            <AppText variant="caption" color="danger">
+              {lockError}
+            </AppText>
+          ) : null}
+        </Card>
+      )}
     </>
   );
 }
