@@ -15,9 +15,13 @@ for (const file of ['coi-sw.js', 'coi-register.js']) copyFileSync(join(root, 'we
 const indexPath = join(out, 'index.html');
 let html = readFileSync(indexPath, 'utf8');
 if (!html.includes('coi-register.js')) {
+  // 100dvh = tatsächlich sichtbare Höhe: In mobilen Browsern verdeckt sonst die Browser-Leiste die Tab-Leiste.
+  const viewportFix = '<style>html,body{height:100%;height:100dvh}#root{height:100%}</style>';
   const tag = `<script src="${base}coi-register.js" data-base="${base}"></script>`;
-  html = html.replace(/<head>/i, `<head>${tag}`);
+  html = html.replace(/<head>/i, `<head>${tag}`).replace(/<\/head>/i, `${viewportFix}</head>`);
   if (!html.includes(tag)) throw new Error('Kein <head> in index.html gefunden');
+  // viewport-fit=cover, damit die sicheren Bereiche (Notch, Home-Leiste) bekannt sind
+  html = html.replace('shrink-to-fit=no', 'shrink-to-fit=no, viewport-fit=cover');
   writeFileSync(indexPath, html);
 }
 writeFileSync(join(out, '404.html'), html);

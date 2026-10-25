@@ -56,7 +56,7 @@ export function OnboardingFlow({ initial, requestNotifications, onFinish }: Prop
           <View key={i} style={[styles.dot, { backgroundColor: i <= step ? p.primary : p.border }]} />
         ))}
       </View>
-      <Animated.View key={step} entering={reduceMotion ? undefined : FadeIn.duration(400)} style={styles.body}>
+      <Animated.View key={step} entering={reduceMotion || isWeb ? undefined : FadeIn.duration(400)} style={styles.body}>
         {step === 0 ? <WelcomeStep /> : null}
         {step === 1 ? <ProgramStep /> : null}
         {step === 2 ? (
