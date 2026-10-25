@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LockGate } from '../components/LockGate';
 import { AppText } from '../components/ui/AppText';
+import { HeaderBack } from '../components/ui/HeaderBack';
 import { Button } from '../components/ui/Button';
 import { getDb } from '../db/client';
 import { useReminderSync } from '../hooks/useReminderSync';
@@ -34,6 +35,8 @@ function RootStack() {
           headerTitleStyle: { fontWeight: '600' },
           contentStyle: { backgroundColor: p.background },
           headerBackTitle: 'Zurück',
+          // Immer ein Zurück-Knopf – auch ohne Verlauf (z. B. Web-App vom Home-Bildschirm).
+          headerLeft: ({ canGoBack, tintColor }) => <HeaderBack canGoBack={canGoBack} tintColor={tintColor} />,
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
